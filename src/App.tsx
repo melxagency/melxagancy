@@ -100,6 +100,7 @@ interface FAQ {
 }
 
 interface TeamMember {
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
   id: string;
   firstName: string;
   lastName: string;
@@ -107,8 +108,16 @@ interface TeamMember {
   photo: string;
   bio: string;
 }
+import AdminPanel from './components/AdminPanel'
 
 function App() {
+  // Check if current path is admin
+  const isAdminRoute = window.location.pathname.startsWith('/admin')
+
+  if (isAdminRoute) {
+    return <AdminPanel />
+  }
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -2550,15 +2559,23 @@ function App() {
                 <button
                   type="submit"
                   className="flex-1 py-3 bg-gradient-to-r from-[#0e368d] to-[#942ace] text-white rounded-xl font-semibold hover:shadow-lg transition-all"
-                >
-                  Solicitar Plan
-                </button>
-              </div>
-            </form>
+    <Router>
+      <Routes>
+        <Route path="/admin/*" element={<AdminPanel />} />
+        <Route path="/" element={
+          <div className="min-h-screen bg-white">
+            <Header />
+            <Hero />
+            <Services />
+            <About />
+            <Team />
+            <Contact />
+            <Footer />
           </div>
-        </div>
-      )}
-    </div>
+        } />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
   );
 }
 
